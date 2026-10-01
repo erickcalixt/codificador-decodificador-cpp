@@ -15,4 +15,6 @@ struct dadosDaLinha {
     string dadosConvenio;
 };
 
-
+int codigo_banco(){
+	
+}
