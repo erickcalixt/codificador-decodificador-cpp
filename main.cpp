@@ -8,13 +8,13 @@ struct dadosDaLinha {
     //Luana
 	string banco;
     string moeda;
-    string vencimento;
+    string data;
 	//Erick
     string valor;
     string convenio;
     string dadosConvenio;
 };
 
-int codigo_banco(){
-	
+int fator_vencimento(string data){
+
 }
