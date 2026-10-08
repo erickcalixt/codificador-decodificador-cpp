@@ -13,7 +13,7 @@ struct dadosDaLinha {
     string convenio;
     string dadosConvenio;
 };
-// Vamos começar pelo codificador
+// Vamos começar pelo codificador -- Concordo, mas antes temos que codificar o módulo 11 (digito verificador)
 
 //função para ler o codigo do banco
 string codigo_banco(){
@@ -22,6 +22,7 @@ string codigo_banco(){
     cin>> banco;
     return banco;
 }
+
 //função para validar a quantidade de digitos do banco
 bool validar_banco(){
     if(banco.size() != 3){
@@ -35,9 +36,9 @@ bool validar_banco(){
     return true;
 }
 
-// preciso de comentarios para entender o que foi feito
-#if 0
-int digitoVerificador(string bloco) {
+//DIGITO VERIFICADOR - MÓDULO 10
+//A função abaixo define o cálculo do digito verificador, de acordo com o módulo 10, seguindo as regras da Febraban.
+int digitoVerificadorMod10(string bloco) {
     int somaTotal = 0;
     int multiplicador = 2;
 
@@ -69,7 +70,22 @@ int digitoVerificador(string bloco) {
 
     return digitoFinal;
 }
-#endif
+
+//DIGITO VERIFICADOR - MÓDULO 11
+//A função abaixo define o cálculo do digito verificador, de acordo com o módulo 11, seguindo as regras da Febraban.
+int digitoVerificadorMod11(string bloco){
+    int somaTotal = 0;
+    int multiplicador = 2;
+
+    for(int i = bloco.lenght() - 1; i >= 0; i--){
+        int num = bloco[i] '0';
+        int resultado = num * multiplicador;
+        
+    }
+
+}
+
+
 
 int main() {
 
@@ -83,10 +99,10 @@ int main() {
     }
 
 
-    //Não irei editar, pois não sei do que se trata.
-    //Comentei para não atrapalhar na minha implementação
+    //Não irei editar, pois não sei do que se trata. -- Não precisa editar, você não ficou com essa parte.
+    //Comentei para não atrapalhar na minha implementação -- Foi só um menu de interação pro usuário final, esse menu tem que ter, não atrapalharia a sua implementação diretamente.
     
-    #if 0 // serve para dizer ao pré-processador do c++ para ignorar todo o cod até encontrar o #endif
+    //Laço de chamada da entrada do usuário, nele o usuário vai dizer se quer codificar ou decodificar o código
     while (opcao != 0)
     {
         cout << "Digite 1 para codificar ou 2 para decodificar: " << endl;
@@ -109,7 +125,7 @@ int main() {
             cout << "Numero invalido!" << endl;
         }
     }
-    #endif
+    
 
     return 0;
 
