@@ -1,9 +1,11 @@
 Criamos esse repositorio para fazer o trabalho de P1
 
-Dividimos as atividades do trabalho em 2 partes, um vai ficar responsavel pelo codificar e outro pelo decodificador.
+Obs¹: Gostaria de pedir para que cada codigo feito fosse comentado para que eu consiga entender em qual parte vc parou, o que foi feito, o que foi testado. 
+Também Gostaria de pedir para que as variaveis e nomes de funções fossem feitas estilo camelcase ou snake_case para uma melhor organização do codigo
+gostaria de começar a fazer classes para o codificador, qual a sua opinão sobre isso? 
 
 Obs.: Acho melhor a gente ir comentando oq for fazendo, percebi que você fez algumas alterações mas como não tem comentario nao sei do que se trata.
 
 Autores:
-Erick Calixto - Decodificador
-Luana Mendonça - Codificador
+Erick Calixto 
+Luana Mendonça 

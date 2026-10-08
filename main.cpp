@@ -1,20 +1,20 @@
 #include <iostream>
 #include <string>
 using namespace std;
-	
-//criei a estrutura de dados usando struct
-	
+
+// A estrutura de dados do código de barras foi criada através de uma struct
+
+//Acho que seria legal fazer uma classe para o codificador
 struct dadosDaLinha {
-    //Luana
-	string banco;
+    string banco;
     string moeda;
-    string data;
+    string vencimento;
 	//Erick
     string valor;
     string convenio;
     string dadosConvenio;
 };
 
-int fator_vencimento(string data){
-
+int codigo_banco(){
+	
 }
