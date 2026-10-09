@@ -81,19 +81,22 @@ int dv_mod11(string bloco){
         int num = bloco[i] - '0';
         int resultado = num * multiplicador;        
 
-        if (multiplicador == multiplicador){
-            multiplicador = multiplicador + 1;
-            if (multiplicador > 9){
-                multiplicador = 2;
-            }
+        somaTotal = somaTotal + resultado;
+
+        multiplicador = multiplicador + 1;
+
+        if(multiplicador > 9){
+            multiplicador = 2;
+        }    
+
+        int resto = somaTotal % 11;
+        int digitoFinal = 11 - resto;
+
+        if(digitoFinal == 0 || digitoFinal == 10 || digitoFinal == 11){
+            digitoFinal = 1;
         }
 
-        somaTotal = somaTotal + resultado;
-        
-
-
-
-
+        return digitoFinal;
     }
 
 }
