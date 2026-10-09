@@ -24,7 +24,7 @@ string codigo_banco(){
 }
 
 //função para validar a quantidade de digitos do banco
-bool validar_banco(){
+bool validar_banco(string banco){
     if(banco.size() != 3){
         return false;
     }
@@ -87,17 +87,17 @@ int dv_mod11(string bloco){
 
         if(multiplicador > 9){
             multiplicador = 2;
-        }    
-
-        int resto = somaTotal % 11;
-        int digitoFinal = 11 - resto;
-
-        if(digitoFinal == 0 || digitoFinal == 10 || digitoFinal == 11){
-            digitoFinal = 1;
-        }
-
-        return digitoFinal;
+        }         
     }
+
+    int resto = somaTotal % 11;
+    int digitoFinal = 11 - resto;
+
+    if(digitoFinal == 0 || digitoFinal == 10 || digitoFinal == 11){
+        digitoFinal = 1;
+    }        
+
+    return digitoFinal;
 
 }
 
@@ -108,7 +108,7 @@ int main() {
     // validando o codigo do banco e chamando funções
     string banco = codigo_banco();
 
-    if(validar_banco(string banco)){
+    if(validar_banco(banco)){
         cout << "Banco: " << banco <<endl;
     }else{
         cout << "Alerta Vermelho: Codigo de banco invalido";
