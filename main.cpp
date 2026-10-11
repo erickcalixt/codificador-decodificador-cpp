@@ -291,7 +291,13 @@ string montar_campo_livre(const dadosDaLinha &dados) {
     }
     else if (dados.tipo_convenio == "17") {
         // Nosso Numero livre: convenio de 6 + NN de 17 + modalidade 21
+<<<<<<< HEAD
         campo_livre = dados.dados_convenio + dados.nosso_numero + dados.modalidade;
+=======
+        campo_livre = dados.dados_convenio
+                    + dados.nosso_numero
+                    + dados.modalidade;
+>>>>>>> 88564da53b5a7ef9a3d832a47d368574199cf0f7
     }
     else {
         cout << "Tipo de convenio invalido." << endl;
