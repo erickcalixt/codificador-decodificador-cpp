@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 using namespace std;
@@ -12,6 +11,13 @@ struct dadosDaLinha {
     string valor;
     string tipo_convenio;
     string dados_convenio;
+
+    string sequencial;
+    string agencia;
+    string conta;
+    string modalidade;
+    string complemento;
+
     string nosso_numero;
     string codigo_barras;
     string linha_digitavel;
@@ -56,7 +62,7 @@ string codigo_banco() {
 }
 
 // Função para validar a quantidade de dígitos do banco
-bool validar_banco(string banco) {
+bool validar_banco(const string& banco) {
     if (banco.size() != 3) {
         return false;
     }
@@ -164,24 +170,191 @@ int dv_mod11(string bloco) {
     return digitoFinal;
 }
 
+
+string ler_digitos(int quantidade, const string& mensagem) {
+    string entrada;
+
+    while (true) {
+        cout << mensagem;
+        cin >> entrada;
+
+        if (entrada.size() != quantidade) {
+            cout << "Erro: informe exatamente "
+                 << quantidade << " digitos." << endl;
+            continue;
+        }
+
+        bool apenas_digitos = true;
+
+        for (int i = 0; i < entrada.size(); i++) {
+            if (entrada[i] < '0' || entrada[i] > '9') {
+                apenas_digitos = false;
+                break;
+            }
+        }
+
+        if (!apenas_digitos) {
+            cout << "Erro: digite somente numeros de 0 a 9."
+                 << endl;
+            continue;
+        }
+
+        return entrada;
+    }
+}
+
+// Funcao para identificar o tipo de convenio, validar os dados informados
+// e armazenar as informacoes correspondentes na estrutura dadosDaLinha.
+void convenio(dadosDaLinha &dados) {
+    int opcao = 0;
+
+    while (opcao != 1 && opcao != 2 &&
+           opcao != 3 && opcao != 4) {
+
+        cout << "\n--- TIPO DE CONVENIO ---" << endl;
+        cout << "1 - Convenio de 4 posicoes" << endl;
+        cout << "2 - Convenio de 5 posicoes" << endl;
+        cout << "3 - Convenio de 7 posicoes" << endl;
+        cout << "4 - Nosso numero livre de 17 posicoes" << endl;
+        cout << "Escolha uma opcao: ";
+
+        cin >> opcao;
+
+        if (opcao < 1 || opcao > 4) {
+            cout << "Alerta Vermelho: opcao invalida." << endl;
+        }
+    }
+if (opcao == 1) {
+    dados.tipo_convenio = "04";
+
+    dados.dados_convenio =
+        ler_digitos(4, "Digite o convenio (4 digitos): ");
+
+    dados.sequencial =
+        ler_digitos(7, "Digite o sequencial (7 digitos): ");
+
+    dados.agencia =
+        ler_digitos(4, "Digite a agencia (4 digitos): ");
+
+    dados.conta =
+        ler_digitos(8, "Digite a conta (8 digitos): ");
+
+    dados.modalidade =
+        ler_digitos(2, "Digite a modalidade (2 digitos): ");
+
+} else if (opcao == 2) {
+    dados.tipo_convenio = "05";
+
+    dados.dados_convenio =
+        ler_digitos(5, "Digite o convenio (5 digitos): ");
+
+    cout << "Alerta Amarelo: falta confirmar a composicao "
+         << "do campo livre para o convenio de 5 posicoes."
+         << endl;
+
+} else if (opcao == 3) {
+    dados.tipo_convenio = "07";
+
+    dados.dados_convenio =
+        ler_digitos(7, "Digite o convenio (7 digitos): ");
+
+    dados.complemento =
+        ler_digitos(10, "Digite o complemento (10 digitos): ");
+
+    dados.modalidade =
+        ler_digitos(2, "Digite a modalidade (2 digitos): ");
+
+} else {
+    dados.tipo_convenio = "17";
+
+    dados.dados_convenio =
+        ler_digitos(6, "Digite o convenio (6 digitos): ");
+
+    dados.nosso_numero =
+        validar_nosso_numero();
+
+    dados.modalidade = "21";
+}
+    cout << "\nValidacao dos campos concluida." << endl;
+}
+
+string montar_campo_livre(const dadosDaLinha &dados) {
+    string campo_livre;
+
+    if (dados.tipo_convenio == "04") {
+        // Convenio de 4 posicoes: 4 + 7 + 4 + 8 + 2 = 25
+        campo_livre = dados.dados_convenio
+                    + dados.sequencial
+                    + dados.agencia
+                    + dados.conta
+                    + dados.modalidade;
+    }
+    else if (dados.tipo_convenio == "05") {
+        // A composicao para 5 posicoes ainda precisa ser confirmada.
+        cout << "Composicao do convenio de 5 posicoes pendente."
+             << endl;
+        return "";
+    }
+    else if (dados.tipo_convenio == "07") {
+        // Convenio de 7 posicoes: 6 zeros + 7 + 10 + 2 = 25
+        campo_livre = "000000"
+                    + dados.dados_convenio
+                    + dados.complemento
+                    + dados.modalidade;
+    }
+    else if (dados.tipo_convenio == "17") {
+        // Nosso Numero livre: convenio de 6 + NN de 17 + modalidade 21
+        campo_livre = dados.dados_convenio
+                    + dados.nosso_numero
+                    + dados.modalidade;
+    }
+    else {
+        cout << "Tipo de convenio invalido." << endl;
+        return "";
+    }
+
+    if (campo_livre.length() != 25) {
+        cout << "Erro: campo livre deve ter 25 digitos." << endl;
+        return "";
+    }
+
+    return campo_livre;
+}
 // Função provisória do codificador
 void codificador() {
     cout << "\n--- CODIFICADOR ---" << endl;
 
-    string banco = codigo_banco();
+    dadosDaLinha dados;
 
-    if (validar_banco(banco)) {
-        cout << "Banco: " << banco << endl;
+    dados.banco = codigo_banco();
 
-        string nosso_numero = validar_nosso_numero();
-        cout << "Nosso numero: " << nosso_numero << endl;
-
-        cout << "Validacao concluida. A montagem do codigo de barras ainda sera implementada." << endl;
-    } else {
-        cout << "Alerta Vermelho: Codigo de banco invalido." << endl;
+    if (!validar_banco(dados.banco)) {
+        cout << "Alerta Vermelho: Codigo de banco invalido."
+             << endl;
+        return;
     }
+
+    convenio(dados);
+
+    cout << "\nBanco: " << dados.banco << endl;
+    cout << "Tipo de convenio: " << dados.tipo_convenio << endl;
+    cout << "Dados do convenio: " << dados.dados_convenio << endl;
+
+    if (dados.tipo_convenio == "17") {
+        cout << "Nosso numero: " << dados.nosso_numero << endl;
+    }
+
+    cout << "Validacao concluida." << endl;
+
+    string campo_livre = montar_campo_livre(dados);
+
+    if (campo_livre.empty()) {
+        cout << "Nao foi possivel montar o campo livre." << endl;
+    return;
 }
 
+cout << "Campo livre: " << campo_livre << endl;
+}
 // Função provisória do decodificador
 void decodificador() {
     cout << "\n--- DECODIFICADOR ---" << endl;
