@@ -291,13 +291,9 @@ string montar_campo_livre(const dadosDaLinha &dados) {
     }
     else if (dados.tipo_convenio == "17") {
         // Nosso Numero livre: convenio de 6 + NN de 17 + modalidade 21
-<<<<<<< HEAD
-        campo_livre = dados.dados_convenio + dados.nosso_numero + dados.modalidade;
-=======
         campo_livre = dados.dados_convenio
                     + dados.nosso_numero
                     + dados.modalidade;
->>>>>>> 88564da53b5a7ef9a3d832a47d368574199cf0f7
     }
     else {
         cout << "Tipo de convenio invalido." << endl;
@@ -325,6 +321,12 @@ void codificador() {
         return;
     }
 
+    dados.moeda = ler_digitos(1, "Digite o codigo da moeda (1 digito): ");
+
+    dados.vencimento = ler_digitos(4, "Digite o vencimento (4 digitos): ");
+
+    dados.valor = ler_digitos(10, "Digite o valor (no maximo 10 digitos, sem virgualas): ");   
+
     convenio(dados);
 
     cout << "\nBanco: " << dados.banco << endl;
@@ -342,10 +344,19 @@ void codificador() {
     if (campo_livre.empty()) {
         cout << "Nao foi possivel montar o campo livre." << endl;
     return;
+    }
+
+    cout << "Campo livre: " << campo_livre << endl;
+
+    string base_codigo = dados.banco + dados.moeda + dados.vencimento + dados.valor + campo_livre;
+    
+    string dv_calculado = to_string(dv_mod11(base_codigo));
+
+    dados.codigo_barras = dados.banco + dados.moeda + dv_calculado + dados.vencimento + dados.valor + campo_livre;
+
+    cout << "\n>>> CODIGO DE BARRAS GERADO: " << dados.codigo_barras << endl;
 }
 
-cout << "Campo livre: " << campo_livre << endl;
-}
 // Função provisória do decodificador
 void decodificador() {
     cout << "\n--- DECODIFICADOR ---" << endl;
