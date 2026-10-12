@@ -307,7 +307,7 @@ string montar_campo_livre(const dadosDaLinha &dados) {
 
     return campo_livre;
 }
-// Função provisória do codificador
+//CODIFICADOR
 void codificador() {
     cout << "\n--- CODIFICADOR ---" << endl;
 
@@ -378,10 +378,19 @@ void codificador() {
     cout << ">>> LINHA DIGITAVEL GERADA: " << dados.linha_digitavel << endl;
 }
 
-// Função provisória do decodificador
+//DECODIFICADOR
 void decodificador() {
     cout << "\n--- DECODIFICADOR ---" << endl;
-    cout << "Funcao ainda em desenvolvimento." << endl;
+
+    string linha = ler_digitos(47, "Digite os números referentes ao seu código de barras: ");
+
+    dadosDaLinha;
+
+    dadosDaLinha_local.banco = linha.substr(0, 3);
+    dadosDaLinha_local.moeda = linha.substr(3, 1);
+    dadosDaLinha_local.vencimento = linha.substr(33, 4);
+    dadosDaLinha_local.valor = linha.substr(37, 10);
+    
 }
 
 int main() {
