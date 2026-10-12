@@ -392,7 +392,7 @@ void decodificador() {
     dadosDaLinha.vencimento = linha.substr(33, 4);
     dadosDaLinha.valor = linha.substr(37, 10);
 
-    
+    //Digitos do campo livre:
     
 
     
