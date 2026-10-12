@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 using namespace std;
 
 // A estrutura de dados do código de barras foi criada através de uma struct
@@ -270,11 +271,7 @@ string montar_campo_livre(const dadosDaLinha &dados) {
 
     if (dados.tipo_convenio == "04") {
         // Convenio de 4 posicoes: 4 + 7 + 4 + 8 + 2 = 25
-        campo_livre = dados.dados_convenio
-                    + dados.sequencial
-                    + dados.agencia
-                    + dados.conta
-                    + dados.modalidade;
+        campo_livre = dados.dados_convenio + dados.sequencial + dados.agencia + dados.conta + dados.modalidade;
     }
     else if (dados.tipo_convenio == "05") {
         // A composicao para 5 posicoes ainda precisa ser confirmada.
@@ -284,16 +281,11 @@ string montar_campo_livre(const dadosDaLinha &dados) {
     }
     else if (dados.tipo_convenio == "07") {
         // Convenio de 7 posicoes: 6 zeros + 7 + 10 + 2 = 25
-        campo_livre = "000000"
-                    + dados.dados_convenio
-                    + dados.complemento
-                    + dados.modalidade;
+        campo_livre = "000000"+ dados.dados_convenio + dados.complemento + dados.modalidade;
     }
     else if (dados.tipo_convenio == "17") {
         // Nosso Numero livre: convenio de 6 + NN de 17 + modalidade 21
-        campo_livre = dados.dados_convenio
-                    + dados.nosso_numero
-                    + dados.modalidade;
+        campo_livre = dados.dados_convenio + dados.nosso_numero + dados.modalidade;
     }
     else {
         cout << "Tipo de convenio invalido." << endl;
@@ -392,10 +384,23 @@ void decodificador() {
     dadosDaLinha.vencimento = linha.substr(33, 4);
     dadosDaLinha.valor = linha.substr(37, 10);
 
-    //Digitos do campo livre:
+    //validando o tamanho e os caracteres de entrada do decodificador
+    bool validar_entrada_decodificador(const string& entrada) {
     
+    if (entrada.size() != 44 && entrada.size() != 47) {
+        cout << "alerta vermelho: informe 44 ou 47 digitos." << endl;
+        return false;
+    }
 
-    
+    for (char caractere : entrada) {
+        if (caractere < '0' || caractere > '9') {
+            cout << "alerta vermelho: digite apenas numeros." << endl;
+            return false;
+        }
+    }
+
+    return true;
+    }
 }
 
 int main() {
