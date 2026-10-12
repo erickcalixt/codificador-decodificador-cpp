@@ -464,6 +464,36 @@ void codificador() {
 //testar 
 void decodificador() {
 
+    cout << "Digite o codigo de barras (44) ou a linha digitavel (47): ";
+
+    string entrada;
+
+    // Le a linha inteira, incluindo pontos e espacos.
+    if (!getline(cin >> ws, entrada)) {
+        cout << "alerta vermelho: faltam dados de entrada." << endl;
+        return;
+    }
+
+    // Remove a formatacao da linha digitavel.
+    string numeros;
+
+    for (char caractere : entrada) {
+        if (caractere != '.' && caractere != ' ' && caractere != '\t') {
+            numeros += caractere;
+        }
+    }
+
+    // Cria a variavel que guarda os dados.
+    dadosDaLinha dados;
+
+    dados.codigo_barras = obter_codigo_barras(numeros);
+
+    if (dados.codigo_barras.empty()) {
+        return;
+    }
+
+    // Daqui em diante, trabalhamos com o codigo de 44 digitos.
+    string codigo = dados.codigo_barras;
 }
 
 int main() {
