@@ -567,6 +567,41 @@ void decodificador() {
         return;
     }
 
+    //A data de vencimento precisa ser tratada com cautela, para isso o código abaixo recupera ela usando um if
+    string data_formatada = "Sem vencimento";
+    if (stoi(dados.vencimento) != 0) {
+        int ciclo = 0;
+        cout << "Informe o ciclo do vencimento (1 = ate 21/02/2025 | 2 = a partir de 22/02/2025): ";
+        cin >> ciclo;
+        data_formatada = recuperar_data(dados.vencimento, ciclo);
+        if (data_formatada.empty()) {
+            return; 
+        }
+    }
+
+    long long valor_inteiro = stoll(dados.valor);
+    long long reais = valor_inteiro / 100;
+    long long centavos = valor_inteiro % 100;
+
+    cout << "\n=== BOLETO DECODIFICADO COM SUCESSO ===" << endl;
+    cout << "Codigo de Barras (44): " << dados.codigo_barras << endl;
+    cout << "Banco: " << dados.banco << endl;
+    cout << "Moeda: " << dados.moeda << endl;
+    cout << "Fator de Vencimento: " << dados.vencimento << " (" << data_formatada << ")" << endl;
+    cout << "Valor: R$ " << reais << "," << (centavos < 10 ? "0" : "") << centavos << " (" << dados.valor << ")" << endl;
+    cout << "Tipo de Convenio: " << dados.tipo_convenio << " posicoes" << endl;
+    cout << "Dados do Convenio: " << dados.dados_convenio << endl;
+    cout << "Nosso Numero: " << dados.nosso_numero << endl;
+    cout << "Modalidade: " << dados.modalidade << endl;
+
+    if (dados.tipo_convenio == "07") {
+        cout << "Complemento: " << dados.complemento << endl;
+    } else if (dados.tipo_convenio == "04" || dados.tipo_convenio == "06") {
+        cout << "Sequencial: " << dados.sequencial << endl;
+        cout << "Agencia: " << dados.agencia << endl;
+        cout << "Conta: " << dados.conta << endl;
+    }
+
 }
 
 int main() {
