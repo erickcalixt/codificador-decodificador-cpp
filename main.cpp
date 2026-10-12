@@ -421,7 +421,6 @@ void decodificador() {
             cout << "alerta vermelho: DV geral incorreto." << endl;
             return "";
         }
-
         return codigo;
     }
 
