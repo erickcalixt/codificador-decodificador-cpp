@@ -494,6 +494,79 @@ void decodificador() {
 
     // Daqui em diante, trabalhamos com o codigo de 44 digitos.
     string codigo = dados.codigo_barras;
+    
+    dados.banco = codigo.substr(0, 3);
+    dados.moeda = codigo.substr(3, 1);
+    dados.vencimento = codigo.substr(5, 4);
+    dados.valor = codigo.substr(9, 10);
+
+    string campo_livre = codigo.substr(19, 25);
+
+    dados.modalidade = campo_livre.substr(23, 2);
+
+    // O manual fornecido define o campo livre do Banco do Brasil.
+    if (dados.banco != "001" || dados.moeda != "9") {
+        cout << "alerta vermelho: campo livre suportado apenas para banco 001 e moeda 9." << endl;
+        return;
+    }
+
+    // Modalidade 21 identifica o nosso numero livre de 17 posicoes.
+    if (dados.modalidade == "21") {
+        
+        dados.tipo_convenio = "17";
+
+        dados.dados_convenio = campo_livre.substr(0, 6);
+        dados.nosso_numero = campo_livre.substr(6, 17);
+
+    } else if (campo_livre.substr(0, 6) == "000000") {
+        // Convenio de sete posicoes: seis zeros iniciais.
+        dados.tipo_convenio = "07";
+
+        dados.dados_convenio = campo_livre.substr(6, 7);
+        dados.complemento = campo_livre.substr(13, 10);
+
+        dados.nosso_numero = dados.dados_convenio + dados.complemento;
+
+        if (stoi(dados.dados_convenio) < 1000000) {
+            cout << "alerta vermelho: convenio 07 incompativel com o manual." << endl;
+            return;
+        }
+
+    } else {
+        // Os convenios 04 e 06 nao podem ser diferenciados
+        // apenas pelos digitos do codigo.
+        cout << "Tipo do convenio (04 ou 06, conforme o manual): ";
+
+        if (!(cin >> dados.tipo_convenio)) {
+            cout << "alerta vermelho: faltou o tipo do convenio." << endl;
+            return;
+        }
+
+        int tamanho;
+
+        if (dados.tipo_convenio == "04") {
+            tamanho = 4;
+        } else if (dados.tipo_convenio == "06") {
+            tamanho = 6;
+        } else {
+            cout << "alerta vermelho: informe 04 ou 06 o manual nao define 05." << endl;
+            return;
+        }
+
+        dados.dados_convenio = campo_livre.substr(0, tamanho);
+
+        dados.sequencial = campo_livre.substr(tamanho, 11 - tamanho);
+
+        dados.agencia = campo_livre.substr(11, 4);
+        dados.conta = campo_livre.substr(15, 8);
+        dados.nosso_numero = campo_livre.substr(0, 11);
+    }
+
+    if (stoi(dados.dados_convenio) == 0) {
+        cout << "alerta vermelho: convenio nao pode ser zero." << endl;
+        return;
+    }
+
 }
 
 int main() {
