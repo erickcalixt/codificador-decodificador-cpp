@@ -350,11 +350,32 @@ void codificador() {
 
     string base_codigo = dados.banco + dados.moeda + dados.vencimento + dados.valor + campo_livre;
     
-    string dv_calculado = to_string(dv_mod11(base_codigo));
+    string dv11_calculado = to_string(dv_mod11(base_codigo));
 
-    dados.codigo_barras = dados.banco + dados.moeda + dv_calculado + dados.vencimento + dados.valor + campo_livre;
+    dados.codigo_barras = dados.banco + dados.moeda + dv11_calculado + dados.vencimento + dados.valor + campo_livre;
 
     cout << "\n>>> CODIGO DE BARRAS GERADO: " << dados.codigo_barras << endl;
+
+    //Linha digitável
+    string bloco_1 = dados.banco + dados.moeda + campo_livre.substr(0, 5);
+    string dv1 = to_string(dv_mod10(bloco_1));
+    string campo_1 = bloco_1.substr(0, 5) + "." + bloco_1.substr(5, 4) + dv1;
+    
+    string bloco_2 = campo_livre.substr(5, 10);
+    string dv2 = to_string(dv_mod10(bloco_2));
+    string campo_2 = bloco_2.substr(0, 5) + "." + bloco_2.substr(5, 5) + dv2;
+
+    string bloco_3 = campo_livre.substr(15, 10);
+    string dv3 = to_string(dv_mod10(bloco_3));
+    string campo_3 = bloco_3.substr(0, 5) + "." + bloco_3.substr(5, 5) + dv3;
+
+    string campo_4 = dv11_calculado;
+
+    string campo_5 = dados.vencimento + dados.valor;
+
+    dados.linha_digitavel = campo_1 + " " + campo_2 + " " + campo_3 + " " + campo_4 + " " + campo_5;
+
+    cout << ">>> LINHA DIGITAVEL GERADA: " << dados.linha_digitavel << endl;
 }
 
 // Função provisória do decodificador
