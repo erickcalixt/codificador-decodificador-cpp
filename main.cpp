@@ -4,7 +4,6 @@
 using namespace std;
 
 // A estrutura de dados do código de barras foi criada através de uma struct
-
 struct dadosDaLinha {
     string banco;
     string moeda;
@@ -171,7 +170,8 @@ int dv_mod11(string bloco) {
     return digitoFinal;
 }
 
-
+// Lê um campo com a quantidade de dígitos indicada.
+// Repete a leitura até que a entrada tenha o tamanho correto e somente números.
 string ler_digitos(int quantidade, const string& mensagem) {
     string entrada;
 
@@ -200,6 +200,111 @@ string ler_digitos(int quantidade, const string& mensagem) {
 
         return entrada;
     }
+}
+
+//validando o tamanho e os caracteres de entrada do decodificador
+bool validar_entrada_decodificador(const string& entrada) {
+    
+    if (entrada.size() != 44 && entrada.size() != 47) {
+        cout << "alerta vermelho: informe 44 ou 47 digitos." << endl;
+        return false;
+    }
+
+    for (char caractere : entrada) {
+        if (caractere < '0' || caractere > '9') {
+            cout << "alerta vermelho: digite apenas numeros." << endl;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//conferindo o DV e codigo de barras
+string obter_codigo_barras(const string& entrada) {
+
+        if(!validar_entrada_decodificador(entrada)) {
+            return "";
+        }
+
+        string codigo;
+
+        if (entrada.size() == 47) {
+        // Confere os tres DVs da linha digitavel.
+        int dv1 = dv_mod10(entrada.substr(0, 9));
+        int dv2 = dv_mod10(entrada.substr(10, 10));
+        int dv3 = dv_mod10(entrada.substr(21, 10));
+
+        if (dv1 != entrada[9] - '0' || dv2 != entrada[20] - '0' || dv3 != entrada[31] - '0') {
+
+            cout << "alerta vermelho: DV da linha digitavel incorreto."  << endl;
+            return "";
+        }
+
+        // Banco/moeda + DV geral + fator/valor + campo livre.
+        codigo = entrada.substr(0, 4) + entrada.substr(32, 1) + entrada.substr(33, 14) + entrada.substr(4, 5) + entrada.substr(10, 10) + entrada.substr(21, 10);
+        } else {
+        // A entrada ja e um codigo de barras de 44 digitos.
+            codigo = entrada;
+        }
+
+        // Retira o DV geral, que esta na quinta posicao.
+        string sem_dv = codigo.substr(0, 4) + codigo.substr(5);
+
+        int dv_calculado = dv_mod11(sem_dv);
+        int dv_informado = codigo[4] - '0';
+
+        if (dv_calculado != dv_informado) {
+            cout << "alerta vermelho: DV geral incorreto." << endl;
+            return "";
+        }
+        return codigo;
+    }
+
+// Converte o fator de vencimento em uma data, conforme o ciclo informado.
+// A biblioteca <ctime> ajusta os dias, meses e anos automaticamente.
+string recuperar_data(const string& fator, int ciclo) {
+    int numero = stoi(fator);
+
+    if (numero == 0) {
+        return "Sem vencimento";
+    }
+
+    tm data = {};
+
+    data.tm_hour = 12;
+    data.tm_isdst = -1;
+
+    if (ciclo == 1) {
+    // Base antiga: 07/10/1997.
+        data.tm_year = 1997 - 1900;
+        data.tm_mon = 10 - 1;
+        data.tm_mday = 7 + numero;
+    } else if (ciclo == 2 && numero >= 1000) {
+        // Base nova: fator 1000 em 22/02/2025.
+        data.tm_year = 2025 - 1900;
+        data.tm_mon = 2 - 1;
+        data.tm_mday = 22 + numero - 1000;
+
+    } else {
+        cout << "alerta vermelho: ciclo invalido para este fator."  << endl;
+        return "";
+    }
+
+    // A biblioteca converte os dias excedentes em meses e anos.
+    if (mktime(&data) == static_cast<time_t>(-1)) {
+        cout << "alerta vermelho: data fora do intervalo da biblioteca."  << endl;
+        return "";
+    }
+
+    char resultado[11];
+
+    if (strftime(resultado, sizeof(resultado), "%d/%m/%Y", &data) == 0) {
+        cout << "alerta vermelho: nao foi possivel formatar a data." << endl;
+        return "";
+    }
+
+    return string(resultado);
 }
 
 // Funcao para identificar o tipo de convenio, validar os dados informados
@@ -250,6 +355,8 @@ void convenio(dadosDaLinha &dados) {
     cout << "\nValidacao dos campos concluida." << endl;
 }
 
+// Monta o campo livre de 25 dígitos conforme o tipo de convênio.
+// Reúne os dados na ordem correspondente e verifica o tamanho final.
 string montar_campo_livre(const dadosDaLinha &dados) {
     string campo_livre;
 
@@ -282,6 +389,7 @@ string montar_campo_livre(const dadosDaLinha &dados) {
 
     return campo_livre;
 }
+
 //CODIFICADOR
 void codificador() {
     cout << "\n--- CODIFICADOR ---" << endl;
@@ -353,76 +461,8 @@ void codificador() {
 }
 
 //DECODIFICADOR
-//-- Função ainda não finalizada
+//testar 
 void decodificador() {
-    cout << "\n--- DECODIFICADOR ---" << endl;
-
-    string linha = ler_digitos(47, "Digite os números referentes ao seu código de barras: ");
-
-    dadosDaLinha;
-
-    dadosDaLinha.banco = linha.substr(0, 3);
-    dadosDaLinha.moeda = linha.substr(3, 1);
-    dadosDaLinha.vencimento = linha.substr(33, 4);
-    dadosDaLinha.valor = linha.substr(37, 10);
-
-    //validando o tamanho e os caracteres de entrada do decodificador
-    bool validar_entrada_decodificador(const string& entrada) {
-    
-        if (entrada.size() != 44 && entrada.size() != 47) {
-            cout << "alerta vermelho: informe 44 ou 47 digitos." << endl;
-            return false;
-        }
-
-        for (char caractere : entrada) {
-            if (caractere < '0' || caractere > '9') {
-                cout << "alerta vermelho: digite apenas numeros." << endl;
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    string obter_codigo_barras(const string& entrada) {
-
-        if(!validar_entrada_decodificador(entrada)) {
-            return "";
-        }
-
-        string codigo;
-
-        if (entrada.size() == 47) {
-        // Confere os tres DVs da linha digitavel.
-        int dv1 = dv_mod10(entrada.substr(0, 9));
-        int dv2 = dv_mod10(entrada.substr(10, 10));
-        int dv3 = dv_mod10(entrada.substr(21, 10));
-
-        if (dv1 != entrada[9] - '0' || dv2 != entrada[20] - '0' || dv3 != entrada[31] - '0') {
-
-            cout << "alerta vermelho: DV da linha digitavel incorreto."  << endl;
-            return "";
-        }
-
-        // Banco/moeda + DV geral + fator/valor + campo livre.
-        codigo = entrada.substr(0, 4) + entrada.substr(32, 1) + entrada.substr(33, 14) + entrada.substr(4, 5) + entrada.substr(10, 10) + entrada.substr(21, 10);
-        } else {
-        // A entrada ja e um codigo de barras de 44 digitos.
-            codigo = entrada;
-        }
-
-        // Retira o DV geral, que esta na quinta posicao.
-        string sem_dv = codigo.substr(0, 4) + codigo.substr(5);
-
-        int dv_calculado = dv_mod11(sem_dv);
-        int dv_informado = codigo[4] - '0';
-
-        if (dv_calculado != dv_informado) {
-            cout << "alerta vermelho: DV geral incorreto." << endl;
-            return "";
-        }
-        return codigo;
-    }
 
 }
 
