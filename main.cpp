@@ -180,8 +180,7 @@ string ler_digitos(int quantidade, const string& mensagem) {
         cin >> entrada;
 
         if (entrada.size() != quantidade) {
-            cout << "Erro: informe exatamente "
-                 << quantidade << " digitos." << endl;
+            cout << "Erro: informe exatamente " << quantidade << " digitos." << endl;
             continue;
         }
 
@@ -195,8 +194,7 @@ string ler_digitos(int quantidade, const string& mensagem) {
         }
 
         if (!apenas_digitos) {
-            cout << "Erro: digite somente numeros de 0 a 9."
-                 << endl;
+            cout << "Erro: digite somente numeros de 0 a 9." << endl;
             continue;
         }
 
@@ -209,8 +207,7 @@ string ler_digitos(int quantidade, const string& mensagem) {
 void convenio(dadosDaLinha &dados) {
     int opcao = 0;
 
-    while (opcao != 1 && opcao != 2 &&
-           opcao != 3 && opcao != 4) {
+    while (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4) {
 
         cout << "\n--- TIPO DE CONVENIO ---" << endl;
         cout << "1 - Convenio de 4 posicoes" << endl;
@@ -227,42 +224,29 @@ void convenio(dadosDaLinha &dados) {
     }
     if (opcao == 1) {
         dados.tipo_convenio = "04";
-
         dados.dados_convenio = ler_digitos(4, "Digite o convenio (4 digitos): ");
-
         dados.sequencial = ler_digitos(7, "Digite o sequencial (7 digitos): ");
-
         dados.agencia = ler_digitos(4, "Digite a agencia (4 digitos): ");
-
         dados.conta = ler_digitos(8, "Digite a conta (8 digitos): ");
-
         dados.modalidade = ler_digitos(2, "Digite a modalidade (2 digitos): ");
 
     } else if (opcao == 2) {
         dados.tipo_convenio = "05";
-
         dados.dados_convenio = ler_digitos(5, "Digite o convenio (5 digitos): ");
-
-    cout << "Alerta Amarelo: falta confirmar a composicao " << "do campo livre para o convenio de 5 posicoes." << endl;
+        cout << "Alerta Amarelo: falta confirmar a composicao " << "do campo livre para o convenio de 5 posicoes." << endl;
 
     } else if (opcao == 3) {
         dados.tipo_convenio = "07";
-
         dados.dados_convenio = ler_digitos(7, "Digite o convenio (7 digitos): ");
-
         dados.complemento = ler_digitos(10, "Digite o complemento (10 digitos): ");
-
         dados.modalidade = ler_digitos(2, "Digite a modalidade (2 digitos): ");
 
     } else {
         dados.tipo_convenio = "17";
-
         dados.dados_convenio = ler_digitos(6, "Digite o convenio (6 digitos): ");
-
         dados.nosso_numero = validar_nosso_numero();
-
         dados.modalidade = "21";
-    }
+        }
     cout << "\nValidacao dos campos concluida." << endl;
 }
 
@@ -275,8 +259,7 @@ string montar_campo_livre(const dadosDaLinha &dados) {
     }
     else if (dados.tipo_convenio == "05") {
         // A composicao para 5 posicoes ainda precisa ser confirmada.
-        cout << "Composicao do convenio de 5 posicoes pendente."
-             << endl;
+        cout << "Composicao do convenio de 5 posicoes pendente." << endl;
         return "";
     }
     else if (dados.tipo_convenio == "07") {
@@ -308,8 +291,7 @@ void codificador() {
     dados.banco = codigo_banco();
 
     if (!validar_banco(dados.banco)) {
-        cout << "Alerta Vermelho: Codigo de banco invalido."
-             << endl;
+        cout << "Alerta Vermelho: Codigo de banco invalido." << endl;
         return;
     }
 
@@ -387,20 +369,62 @@ void decodificador() {
     //validando o tamanho e os caracteres de entrada do decodificador
     bool validar_entrada_decodificador(const string& entrada) {
     
-    if (entrada.size() != 44 && entrada.size() != 47) {
-        cout << "alerta vermelho: informe 44 ou 47 digitos." << endl;
-        return false;
-    }
-
-    for (char caractere : entrada) {
-        if (caractere < '0' || caractere > '9') {
-            cout << "alerta vermelho: digite apenas numeros." << endl;
+        if (entrada.size() != 44 && entrada.size() != 47) {
+            cout << "alerta vermelho: informe 44 ou 47 digitos." << endl;
             return false;
         }
+
+        for (char caractere : entrada) {
+            if (caractere < '0' || caractere > '9') {
+                cout << "alerta vermelho: digite apenas numeros." << endl;
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    return true;
+    string obter_codigo_barras(const string& entrada) {
+
+        if(!validar_entrada_decodificador(entrada)) {
+            return "";
+        }
+
+        string codigo;
+
+        if (entrada.size() == 47) {
+        // Confere os tres DVs da linha digitavel.
+        int dv1 = dv_mod10(entrada.substr(0, 9));
+        int dv2 = dv_mod10(entrada.substr(10, 10));
+        int dv3 = dv_mod10(entrada.substr(21, 10));
+
+        if (dv1 != entrada[9] - '0' || dv2 != entrada[20] - '0' || dv3 != entrada[31] - '0') {
+
+            cout << "alerta vermelho: DV da linha digitavel incorreto."  << endl;
+            return "";
+        }
+
+        // Banco/moeda + DV geral + fator/valor + campo livre.
+        codigo = entrada.substr(0, 4) + entrada.substr(32, 1) + entrada.substr(33, 14) + entrada.substr(4, 5) + entrada.substr(10, 10) + entrada.substr(21, 10);
+        } else {
+        // A entrada ja e um codigo de barras de 44 digitos.
+            codigo = entrada;
+        }
+
+        // Retira o DV geral, que esta na quinta posicao.
+        string sem_dv = codigo.substr(0, 4) + codigo.substr(5);
+
+        int dv_calculado = dv_mod11(sem_dv);
+        int dv_informado = codigo[4] - '0';
+
+        if (dv_calculado != dv_informado) {
+            cout << "alerta vermelho: DV geral incorreto." << endl;
+            return "";
+        }
+
+        return codigo;
     }
+
 }
 
 int main() {
