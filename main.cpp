@@ -379,6 +379,7 @@ void codificador() {
 }
 
 //DECODIFICADOR
+//-- Função ainda não finalizada
 void decodificador() {
     cout << "\n--- DECODIFICADOR ---" << endl;
 
@@ -386,10 +387,14 @@ void decodificador() {
 
     dadosDaLinha;
 
-    dadosDaLinha_local.banco = linha.substr(0, 3);
-    dadosDaLinha_local.moeda = linha.substr(3, 1);
-    dadosDaLinha_local.vencimento = linha.substr(33, 4);
-    dadosDaLinha_local.valor = linha.substr(37, 10);
+    dadosDaLinha.banco = linha.substr(0, 3);
+    dadosDaLinha.moeda = linha.substr(3, 1);
+    dadosDaLinha.vencimento = linha.substr(33, 4);
+    dadosDaLinha.valor = linha.substr(37, 10);
+
+    
+    
+
     
 }
 
