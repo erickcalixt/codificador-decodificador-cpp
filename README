@@ -1,7 +1,60 @@
-Criamos esse repositorio para fazer o trabalho de P1
+# Codificador e Decodificador de Boletos Bancários (Padrão FEBRABAN / Banco do Brasil)
 
--- Erick você pode fazer os testes finais e adicionar um README com as instruções para o professor?
+Sistema em C++ desenvolvido para gerar (codificar) e interpretar (decodificar) Códigos de Barras (44 posições) e Linhas Digitáveis (47 posições) de boletos bancários, seguindo as especificações técnicas da FEBRABAN e o layout de Campo Livre do Banco do Brasil (código `001`).
 
-Autores:
-Erick Calixto 
-Luana Mendonça 
+---
+
+## Funcionalidades
+
+### 1. Codificador
+* **Validação de Entrada:** Garante que todos os campos informados contenham apenas caracteres numéricos e respeitem o tamanho exato exigido pelo padrão bancário.
+* **Montagem do Campo Livre (25 dígitos):** Suporta as quatro composições do Banco do Brasil:
+  * **Convênio de 4 posições:** Convênio (4) + Sequencial (7) + Agência (4) + Conta (8) + Modalidade (2).
+  * **Convênio de 6 posições:** Convênio (6) + Sequencial (5) + Agência (4) + Conta (8) + Modalidade (2).
+  * **Convênio de 7 posições:** Zeros (`000000`) + Convênio (7) + Complemento (10) + Modalidade (2).
+  * **Nosso Número Livre (17 posições):** Convênio (6) + Nosso Número (17) + Modalidade (`21`).
+* **Cálculo de Dígitos Verificadores:**
+  * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).
+  * **Módulo 10:** Calcula os dígitos verificadores dos três primeiros campos da Linha Digitável.
+* **Geração Formatada:** Exibe o Código de Barras de 44 dígitos e a Linha Digitável de 47 dígitos formatada com pontos e espaços.
+
+### 2. Decodificador
+* **Leitura Flexível:** Aceita tanto o Código de Barras (44 dígitos) quanto a Linha Digitável (47 dígitos), removendo automaticamente pontos, espaços e tabulações.
+* **Verificação de Integridade:** Recalcula e valida os dígitos verificadores (Módulo 10 e Módulo 11) antes de extrair os dados, emitindo alertas caso o código esteja corrompido.
+* **Cálculo da Data de Vencimento:** Converte o fator de vencimento de 4 dígitos em uma data real (`DD/MM/AAAA`) utilizando a biblioteca `<ctime>`, com suporte aos dois ciclos da FEBRABAN:
+  * **Ciclo 1:** Base em `07/10/1997` (até `21/02/2025`).
+  * **Ciclo 2:** Base em `22/02/2025` (fator reiniciado em `1000`).
+* **Formatação Monetária:** Converte o campo de valor de 10 dígitos para o formato em Reais (`R$ X,XX`).
+* **Identificação Automática de Convênio:** Deduz o tipo de convênio a partir da modalidade (`21`) ou do prefixo de zeros (`000000`), solicitando confirmação do usuário apenas quando há ambiguidade estrutural entre os convênios de 4 e 6 posições.
+
+---
+
+## Estrutura do Código
+
+O projeto foi modularizado em torno da estrutura `dadosDaLinha` e das seguintes funções principais:
+
+| Componente / Função | Descrição |
+| :--- | :--- |
+| `struct dadosDaLinha` | Armazena os campos do boleto (banco, moeda, vencimento, valor, dados do convênio, código de barras e linha digitável). |
+| `menu_principal()` | Gerencia o laço de repetição do menu interativo no terminal. |
+| `dv_mod10()` / `dv_mod11()` | Implementam os algoritmos matemáticos da FEBRABAN para cálculo dos dígitos verificadores. |
+| `ler_digitos()` | Função utilitária que valida o tamanho exato e garante que a entrada possua apenas dígitos de `0` a `9`. |
+| `convenio()` | Coleta os dados específicos de acordo com a opção de convênio escolhida pelo usuário. |
+| `montar_campo_livre()` | Concatena e valida os 25 dígitos do campo livre para a geração do boleto. |
+| `obter_codigo_barras()` | Converte uma linha digitável de 47 dígitos em um código de barras de 44 dígitos e valida todos os DVs. |
+| `recuperar_data()` | Calcula a data de vencimento no calendário a partir do fator numérico e do ciclo informado. |
+| `codificador()` | Orquestra o fluxo de leitura, validação e geração do boleto. |
+| `decodificador()` | Orquestra a limpeza da entrada, validação de segurança, extração dos campos e exibição do relatório. |
+
+---
+
+## Como Compilar e Executar
+
+### Pré-requisitos
+* Compilador C++ compatível com o padrão C++11 ou superior (ex.: `g++`, `clang++`).
+
+### Passo a Passo no Terminal
+
+1. Compile o arquivo-fonte (substitua `main.cpp` pelo nome do seu arquivo):
+   ```bash
+   g++ -std=c++11 main.cpp -o boleto
