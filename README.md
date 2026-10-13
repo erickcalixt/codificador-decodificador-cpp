@@ -50,11 +50,14 @@ O projeto foi modularizado em torno da estrutura `dadosDaLinha` e das seguintes 
 
 ## Como Compilar e Executar
 
-### Pré-requisitos
-* Compilador C++ compatível com o padrão C++11 ou superior (ex.: `g++`, `clang++`).
+### Pré-requisitos e Compatibilidade
+* Compilador C++ compatível com o padrão **C++11** ou superior (`g++` ou `clang++`):
+  * **Linux:** O `g++` (GCC) já é o compilador padrão na maioria das distribuições.
+  * **macOS:** Funciona nativamente com o *Xcode Command Line Tools* instalado (que mapeia o comando `g++` automaticamente para o `clang++`).
+  * **Windows:** Compatível via MinGW, MSYS2 ou WSL (gerando automaticamente o executável `boleto.exe`).
 
 ### Passo a Passo no Terminal
 
-1. Compile o arquivo-fonte (substitua `main.cpp` pelo nome do seu arquivo):
+1. Compile o arquivo-fonte (substitua `main.cpp` pelo nome real do arquivo no repositório, caso seja diferente):
    ```bash
    g++ -std=c++11 main.cpp -o boleto
