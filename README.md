@@ -113,7 +113,7 @@ O projeto foi modularizado em torno da estrutura `dadosDaLinha` e das seguintes 
 
 ---
 
-## Participação:
+## Participação
 
 * **Erick Matheus da Silva Calixto: 100%**
 * **Luana Camily Silva Mendonça: 100%**
