@@ -9,10 +9,10 @@ Sistema em C++ desenvolvido para gerar (codificar) e interpretar (decodificar) C
 ### 1. Codificador
 * **Validação de Entrada:** Garante que todos os campos informados contenham apenas caracteres numéricos e respeitem o tamanho exato exigido pelo padrão bancário.
 * **Montagem do Campo Livre (25 dígitos):** Suporta as quatro composições do Banco do Brasil:
-  * **Convênio de 4 posições:** Convênio (4) + Sequencial (7) + Agência (4) + Conta (8) + Modalidade (2).
-  * **Convênio de 6 posições:** Convênio (6) + Sequencial (5) + Agência (4) + Conta (8) + Modalidade (2).
-  * **Convênio de 7 posições:** Zeros (`000000`) + Convênio (7) + Complemento (10) + Modalidade (2).
-  * **Nosso Número Livre (17 posições):** Convênio (6) + Nosso Número (17) + Modalidade (`21`).
+  * **Convênio de 4 posições:** Convênio (4 dígitos) + Sequencial (7 dígitos) + Agência (4 dígitos) + Conta (8 dígitos) + Modalidade (2 dígitos).
+  * **Convênio de 6 posições:** Convênio (6 dígitos) + Sequencial (5 dígitos) + Agência (4 dígitos) + Conta (8 dígitos) + Modalidade (2 dígitos).
+  * **Convênio de 7 posições:** 6 Zeros fixos (`000000`) + Convênio (7 dígitos) + Complemento (10 dígitos) + Modalidade (2 dígitos).
+  * **Nosso Número Livre (17 posições):** Convênio (6 dígitos) + Nosso Número (17 dígitos) + Modalidade fixa `21` (2 dígitos).
 * **Cálculo de Dígitos Verificadores:**
   * **Módulo 10:** Calcula os dígitos verificadores dos três primeiros campos da Linha Digitável.
   * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).  
