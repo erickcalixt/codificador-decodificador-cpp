@@ -1,6 +1,6 @@
 # Codificador e Decodificador de Boletos Bancários (Padrão FEBRABAN / Banco do Brasil)
 
-Sistema em C++ desenvolvido para gerar (codificar) e interpretar (decodificar) Códigos de Barras (44 posições) e Linhas Digitáveis (47 posições) de boletos bancários, seguindo as especificações técnicas da FEBRABAN e o layout de Campo Livre do Banco do Brasil (código `001`).
+Este repositório contém a implementação em C++ de um sistema codificador e decodificador de boletos bancários, desenvolvido para a geração, validação e leitura de Códigos de Barras (44 posições) e Linhas Digitáveis (47 posições) segundo as especificações técnicas da FEBRABAN e o layout de Campo Livre do Banco do Brasil (código `001`).
 
 ---
 
@@ -14,8 +14,8 @@ Sistema em C++ desenvolvido para gerar (codificar) e interpretar (decodificar) C
   * **Convênio de 7 posições:** 6 Zeros fixos (`000000`) + Convênio (7 dígitos) + Complemento (10 dígitos) + Modalidade (2 dígitos).
   * **Nosso Número Livre (17 posições):** Convênio (6 dígitos) + Nosso Número (17 dígitos) + Modalidade fixa `21` (2 dígitos).
 * **Cálculo de Dígitos Verificadores:**
+  * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).
   * **Módulo 10:** Calcula os dígitos verificadores dos três primeiros campos da Linha Digitável.
-  * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).  
 * **Geração Formatada:** Exibe o Código de Barras de 44 dígitos e a Linha Digitável de 47 dígitos formatada com pontos e espaços.
 
 ### 2. Decodificador
@@ -61,3 +61,52 @@ O projeto foi modularizado em torno da estrutura `dadosDaLinha` e das seguintes 
 1. Compile o arquivo-fonte (substitua `main.cpp` pelo nome real do arquivo no repositório, caso seja diferente):
    ```bash
    g++ -std=c++11 main.cpp -o boleto
+   ```
+
+2. Execute o programa:
+   * **No Linux / macOS:**
+     ```bash
+     ./boleto
+     ```
+   * **No Windows (CMD / PowerShell):**
+     ```cmd
+     boleto.exe
+     ```
+
+---
+
+## Caso de Teste (Exemplo de Uso)
+
+### Teste no Codificador (Opção `1`)
+* **Código do banco:** `001`
+* **Código da moeda:** `9`
+* **Vencimento:** `1000`
+* **Valor:** `0000015099`
+* **Tipo de convênio:** `3` (Convênio de 7 posições)
+* **Convênio:** `1234567`
+* **Complemento:** `0000000001`
+* **Modalidade:** `19`
+
+**Saída Esperada:**
+* **Código de Barras:** `00199100000000150990000001234567000000000119`
+* **Linha Digitável:** `00190.00009 01234.567004 00000.001192 9 10000000015099`
+
+### Teste no Decodificador (Opção `2`)
+* **Entrada:** `00190.00009 01234.567004 00000.001192 9 10000000015099`
+* **Ciclo do vencimento:** `2`
+
+**Saída Esperada:**
+* **Banco:** `001` | **Moeda:** `9`
+* **Fator de Vencimento:** `1000 (22/02/2025)`
+* **Valor:** `R$ 150,99 (0000015099)`
+* **Tipo de Convênio:** `07 posicoes`
+* **Dados do Convênio:** `1234567`
+* **Nosso Número:** `12345670000000001`
+* **Complemento:** `0000000001` | **Modalidade:** `19`
+
+---
+
+## Autores
+
+* **Erick Matheus da Silva Calixto**
+* **Luana Camily Silva Mendonça**
