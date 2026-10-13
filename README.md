@@ -88,11 +88,11 @@ O projeto foi modularizado em torno da estrutura `dadosDaLinha` e das seguintes 
 * **Modalidade:** `19`
 
 **Saída Esperada:**
-* **Código de Barras:** `00199100000000150990000001234567000000000119`
-* **Linha Digitável:** `00190.00009 01234.567004 00000.001192 9 10000000015099`
+* **Código de Barras:** `00194100000000150990000001234567000000000119`
+* **Linha Digitável:** `00190.00009 01234.567004 00000.001198 4 10000000015099`
 
 ### Teste no Decodificador (Opção `2`)
-* **Entrada:** `00190.00009 01234.567004 00000.001192 9 10000000015099`
+* **Entrada:** `00190.00009 01234.567004 00000.001198 4 10000000015099`
 * **Ciclo do vencimento:** `2`
 
 **Saída Esperada:**
