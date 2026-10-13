@@ -316,7 +316,7 @@ void convenio(dadosDaLinha &dados) {
 
         cout << "\n--- TIPO DE CONVENIO ---" << endl;
         cout << "1 - Convenio de 4 posicoes" << endl;
-        cout << "2 - Convenio de 5 posicoes" << endl;
+        cout << "2 - Convenio de 6 posicoes" << endl;
         cout << "3 - Convenio de 7 posicoes" << endl;
         cout << "4 - Nosso numero livre de 17 posicoes" << endl;
         cout << "Escolha uma opcao: ";
@@ -400,16 +400,21 @@ void codificador() {
 
     dados.banco = codigo_banco();
 
-    if (!validar_banco(dados.banco)) {
-        cout << "Alerta Vermelho: Codigo de banco invalido." << endl;
+    if (!validar_banco(dados.banco) || dados.banco != "001") {
+        cout << "Alerta Vermelho: Codigo de banco invalido (suportado apenas 001)." << endl;
         return;
     }
 
     dados.moeda = ler_digitos(1, "Digite o codigo da moeda (1 digito): ");
 
+    if (dados.moeda != "9") {
+        cout << "Alerta Vermelho: Moeda invalida (suportado apenas 9)." << endl;
+        return;
+    }
+
     dados.vencimento = ler_digitos(4, "Digite o vencimento (4 digitos): ");
 
-    dados.valor = ler_digitos(10, "Digite o valor (no maximo 10 digitos, sem virgualas): ");   
+    dados.valor = ler_digitos(10, "Digite o valor (10 digitos, sem virgula e com zeros a esquerda): ");   
 
     convenio(dados);
 
