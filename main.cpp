@@ -336,9 +336,12 @@ void convenio(dadosDaLinha &dados) {
         dados.modalidade = ler_digitos(2, "Digite a modalidade (2 digitos): ");
 
     } else if (opcao == 2) {
-        dados.tipo_convenio = "05";
-        dados.dados_convenio = ler_digitos(5, "Digite o convenio (5 digitos): ");
-        cout << "Alerta Amarelo: falta confirmar a composicao " << "do campo livre para o convenio de 5 posicoes." << endl;
+        dados.tipo_convenio = "06";
+        dados.dados_convenio = ler_digitos(6, "Digite o convenio (6 digitos): ");
+        dados.sequencial = ler_digitos(5, "Digite o sequencial (5 digitos): ");
+        dados.agencia = ler_digitos(4, "Digite a agencia (4 digitos): ");
+        dados.conta = ler_digitos(8, "Digite a conta (8 digitos): ");
+        dados.modalidade = ler_digitos(2, "Digite a modalidade (2 digitos): ");
 
     } else if (opcao == 3) {
         dados.tipo_convenio = "07";
@@ -364,10 +367,9 @@ string montar_campo_livre(const dadosDaLinha &dados) {
         // Convenio de 4 posicoes: 4 + 7 + 4 + 8 + 2 = 25
         campo_livre = dados.dados_convenio + dados.sequencial + dados.agencia + dados.conta + dados.modalidade;
     }
-    else if (dados.tipo_convenio == "05") {
-        // A composicao para 5 posicoes ainda precisa ser confirmada.
-        cout << "Composicao do convenio de 5 posicoes pendente." << endl;
-        return "";
+    else if (dados.tipo_convenio == "06") {
+        // Convenio de 6 posicoes: 6 + 5 + 4 + 8 + 2 = 25
+        campo_livre = dados.dados_convenio + dados.sequencial + dados.agencia + dados.conta + dados.modalidade;
     }
     else if (dados.tipo_convenio == "07") {
         // Convenio de 7 posicoes: 6 zeros + 7 + 10 + 2 = 25
