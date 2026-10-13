@@ -14,8 +14,8 @@ Sistema em C++ desenvolvido para gerar (codificar) e interpretar (decodificar) C
   * **Convênio de 7 posições:** Zeros (`000000`) + Convênio (7) + Complemento (10) + Modalidade (2).
   * **Nosso Número Livre (17 posições):** Convênio (6) + Nosso Número (17) + Modalidade (`21`).
 * **Cálculo de Dígitos Verificadores:**
-  * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).
   * **Módulo 10:** Calcula os dígitos verificadores dos três primeiros campos da Linha Digitável.
+  * **Módulo 11:** Calcula o Dígito Verificador Geral (5ª posição do código de barras).  
 * **Geração Formatada:** Exibe o Código de Barras de 44 dígitos e a Linha Digitável de 47 dígitos formatada com pontos e espaços.
 
 ### 2. Decodificador
